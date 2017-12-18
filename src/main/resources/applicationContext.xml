@@ -13,11 +13,50 @@
     <context:component-scan base-package="com"/>
     <!--提供读取配置文件可以使用Spring占位符${}-->
     <context:property-placeholder location="classpath:mongo.properties" file-encoding="utf-8" />
+    <!--启用AspectJ自动代理-->
+    <aop:aspectj-autoproxy/>
+    <!--<bean id="audience" class="com.aspect.Audience"/>-->
+    <bean id="compactDisc" class="com.aspect.TrackCounter"/>
+    <bean id="encoreableDelegate" class="com.aspect.EncoreableIntroducer"/>
+    <bean id="audienceXML" class="com.aspect.AudienceXML"/>
+    <bean id="audience3XML" class="com.aspect.Audience3XML"/>
+    <bean id="trackCounter" class="com.aspect.TrackCounter"/>
+
+    <aop:config>
+        <aop:aspect ref="audienceXML">
+            <aop:pointcut id="performance" expression="execution(* com.service.Performance.perform(..))"/>
+            <aop:before method="silenceCellPhones" pointcut-ref="performance"/>
+            <aop:before method="takeSeats" pointcut-ref="performance"/>
+            <aop:after-returning method="applause" pointcut-ref="performance"/>
+            <aop:after-throwing method="demandRefund" pointcut-ref="performance"/>
+        </aop:aspect>
+    </aop:config>
+
+    <aop:config>
+        <aop:aspect ref="audience3XML">
+            <aop:pointcut id="performance3" expression="execution(* com.service.Performance.perform(..))"/>
+            <aop:around method="watchPerformance" pointcut-ref="performance3"/>
+        </aop:aspect>
+    </aop:config>
+
+    <aop:config>
+        <aop:aspect>
+            <aop:declare-parents types-matching="com.service.CompactDisc+"
+                                 implement-interface="com.service.Encoreable"
+                                 default-impl="com.service.impl.DefaultEncoreable"
+                                 delegate-ref="encoreableDelegate"/>
+
+        </aop:aspect>
+    </aop:config>
+    
+    <aop:config>
+        <aop:aspect ref="trackCounter">
+            <aop:pointcut id="trackPlayed" expression="execution(* com.service.CompactDisc.playTrack(int)) and args(trackNumber)"/>
+            <aop:before method="countTrack" pointcut-ref="trackPlayed"/>
+        </aop:aspect>
+    </aop:config>
 
     <bean id="shoppingCart2" class="com.entity.ShoppingCart2" scope="session">
         <aop:scoped-proxy proxy-target-class="false"/>
     </bean>
-
-
-
 </beans>

@@ -1,28 +1,24 @@
-package com;
+package com.di;
 
-import com.service.Dessert;
+import com.util.MongoUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
-
 /**
- * Created by XiuYin.Cui on 2017/12/1.
+ * Created by XiuYin.Cui on 2017/12/2.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
-public class Test02 {
+public class Test05 {
 
-    @Resource(name = "iceCream")
-    private Dessert dessert;
+    @Autowired
+    private MongoUtil mongoUtil;
 
     @Test
-    public void test02(){
-        dessert.sys();
+    public void  test05(){
+        System.out.println(mongoUtil);
     }
-
 }

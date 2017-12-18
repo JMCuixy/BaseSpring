@@ -1,6 +1,9 @@
-package com;
+package com.di;
 
-import com.util.MongoUtil;
+import com.annotion.Creamy;
+import com.entity.ShoppingCart;
+import com.entity.StoreService;
+import com.service.Dessert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,17 +11,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * Created by XiuYin.Cui on 2017/12/2.
+ * Created by XiuYin.Cui on 2017/12/1.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
-public class Test05 {
+public class Test04 {
 
     @Autowired
-    private MongoUtil mongoUtil;
+    private StoreService storeService;
 
     @Test
-    public void  test05(){
-        System.out.println(mongoUtil);
+    public void test03(){
+       storeService.sys();
     }
+
 }
