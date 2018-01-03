@@ -3,16 +3,18 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/aop
-       http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+       http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+       http://www.springframework.org/schema/mvc ">
 
     <!--提供自动注入配置的扫描包-->
     <context:component-scan base-package="com"/>
     <!--提供读取配置文件可以使用Spring占位符${}-->
-    <context:property-placeholder location="classpath:mongo.properties" file-encoding="utf-8" />
+    <context:property-placeholder location="classpath:mongo.properties" file-encoding="utf-8"/>
     <!--启用AspectJ自动代理-->
     <aop:aspectj-autoproxy/>
     <!--<bean id="audience" class="com.aspect.Audience"/>-->
@@ -45,18 +47,39 @@
                                  implement-interface="com.service.Encoreable"
                                  default-impl="com.service.impl.DefaultEncoreable"
                                  delegate-ref="encoreableDelegate"/>
-
         </aop:aspect>
     </aop:config>
-    
+
     <aop:config>
         <aop:aspect ref="trackCounter">
-            <aop:pointcut id="trackPlayed" expression="execution(* com.service.CompactDisc.playTrack(int)) and args(trackNumber)"/>
+            <aop:pointcut id="trackPlayed"
+                          expression="execution(* com.service.CompactDisc.playTrack(int)) and args(trackNumber)"/>
             <aop:before method="countTrack" pointcut-ref="trackPlayed"/>
         </aop:aspect>
     </aop:config>
 
+    <!--mvc-->
+    <mvc:annotation-driven/>
+
+    <!--当逻辑视图名中包含斜线时，这个斜线也会带到资源的路径名中-->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+    </bean>
+
+
     <bean id="shoppingCart2" class="com.entity.ShoppingCart2" scope="session">
         <aop:scoped-proxy proxy-target-class="false"/>
     </bean>
+
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>
+
+<!--    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+       &lt;!&ndash;设置上传目录/tmp/upload;最大的文件容量设置为2M;最大的内存大小设置为0，表示所有文件都会写入磁盘中;无法设定multipart请求整体的最大容量&ndash;&gt;
+        <property name="uploadTempDir" value="/tmp/upload"/>
+        <property name="maxUploadSize" value="2097152"/>
+        <property name="maxInMemorySize" value="0"/>
+    </bean>-->
 </beans>
