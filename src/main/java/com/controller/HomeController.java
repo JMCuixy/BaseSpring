@@ -3,9 +3,13 @@ package com.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Part;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/12/17.
@@ -24,8 +28,32 @@ public class HomeController {
         return "home";
     }
 
+    //像这种的会被转化成 /home/userName?id=123
     @RequestMapping(value = "/home",method = RequestMethod.GET)
-    public String getHome(){
+    public String getHome(Model model){
+        model.addAttribute("userName","userName");
+        model.addAttribute("id",123);
+        return "redirect:/home/{userName}";
+    }
+
+    @RequestMapping(value = "/home/userName",method = RequestMethod.GET)
+    public String getUserName(Model model){
+        model.addAttribute("userName","userName");
+        return "home";
+    }
+
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    public String getList(RedirectAttributes model){
+        model.addAttribute("show","show");
+        List<String> list = new ArrayList<String>();
+        list.add("str");
+        model.addFlashAttribute("list",list);
+        return "redirect:{show}";
+    }
+
+    @RequestMapping(value = "/show",method = RequestMethod.GET)
+    public String showList(Model model){
+        System.out.println(model.containsAttribute("list"));
         return "home";
     }
 
@@ -39,5 +67,10 @@ public class HomeController {
     public String getHome(@PathVariable(value = "size") int size,Model model){
 
         return "";
+    }
+
+    @RequestMapping("/error")
+    public String error() throws NullPointerException{
+        throw new NullPointerException();
     }
 }

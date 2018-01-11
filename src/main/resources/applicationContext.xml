@@ -45,8 +45,7 @@
         <aop:aspect>
             <aop:declare-parents types-matching="com.service.CompactDisc+"
                                  implement-interface="com.service.Encoreable"
-                                 default-impl="com.service.impl.DefaultEncoreable"
-                                 delegate-ref="encoreableDelegate"/>
+                                 default-impl="com.service.impl.DefaultEncoreable"/>
         </aop:aspect>
     </aop:config>
 
